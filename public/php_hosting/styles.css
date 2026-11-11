@@ -1,0 +1,199 @@
+:root {
+  --primary: #0b1c3d; /* Azul marino institucional */
+  --primary-dark: #071329;
+  --accent: #c99a20;   /* Dorado institucional */
+  --accent-hover: #b08419;
+  --bg: #F5F6F8;
+  --card-bg: #FFFFFF;
+  --text: #1F2937;
+  --text-muted: #6B7280;
+  --border: #E5E7EB;
+  --success: #16A34A;
+  --warning: #D97706;
+  --danger: #DC2626;
+}
+
+body.dark-mode {
+  --bg: #0f172a;
+  --card-bg: #1e293b;
+  --text: #f8fafc;
+  --text-muted: #94a3b8;
+  --border: #334155;
+  --primary: #c99a20;
+  --accent: #f59e0b;
+}
+
+* { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+  font-family: 'Plus Jakarta Sans', Arial, sans-serif; 
+}
+
+body { 
+  background-color: var(--bg); 
+  color: var(--text); 
+  padding-bottom: 40px; 
+  transition: background-color 0.2s, color 0.2s; 
+}
+
+header {
+  background: linear-gradient(135deg, #081a35, #0b1c3d);
+  color: white;
+  padding: 16px 24px;
+  border-bottom: 4px solid var(--accent);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .header-content { flex-direction: row; justify-content: space-between; text-align: left; }
+}
+
+.brand-section { 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+}
+
+.insignia-wrapper {
+  width: 58px;
+  height: 58px;
+  background: white;
+  border-radius: 50%;
+  padding: 3px;
+  border: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  shrink-0;
+}
+
+.insignia-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.school-info h1 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.25rem;
+  color: #ffffff;
+  font-weight: 700;
+  margin: 0;
+}
+
+.school-info p {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+.container { 
+  max-width: 1200px; 
+  margin: 20px auto; 
+  padding: 0 16px; 
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .stats-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+
+.stat-card h4 { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
+.stat-card p { font-size: 1.6rem; font-weight: 800; color: #0b1c3d; margin-top: 4px; }
+body.dark-mode .stat-card p { color: #f8fafc; }
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.tab-btn {
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+}
+
+.tab-btn:hover { color: #0b1c3d; }
+.tab-btn.active { color: #0b1c3d; border-bottom-color: var(--accent); }
+body.dark-mode .tab-btn.active { color: var(--accent); }
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+}
+
+/* Carnet credencial */
+.carnet-credencial {
+  width: 380px;
+  height: 230px;
+  background: #0b1c3d;
+  border-radius: 12px;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  color: #fff;
+  margin: 10px;
+  border: 1px solid #1e3a6e;
+}
+
+@media print {
+  body * { visibility: hidden !important; }
+  .print-page-carnets, .print-page-carnets * { visibility: visible !important; }
+  .print-page-carnets {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-rows: repeat(2, 1fr) !important;
+    gap: 15px !important;
+    height: 100vh !important;
+    box-sizing: border-box !important;
+    padding: 10px !important;
+  }
+}

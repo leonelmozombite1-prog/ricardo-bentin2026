@@ -1,0 +1,10 @@
+{
+  "name": "ricardo-bentin2026",
+  "description": "Sistema integral de control de asistencia escolar con escáner QR, modo kiosco, credenciales imprimibles, directorio docente, calendario escolar y reportes.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

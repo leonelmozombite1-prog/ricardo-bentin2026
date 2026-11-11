@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --primary-navy: #0b1c3d;
+    --accent-gold: #c99a20;
+    --accent-gold-hover: #b08419;
+  }
+}
+
+/* Tipografía de títulos */
+.font-cinzel {
+  font-family: 'Cinzel', serif;
+}
+
+/* Carnet credencial dimensiones exactas */
+.carnet-credencial-card {
+  width: 380px;
+  height: 230px;
+  background: #0b1c3d;
+  border-radius: 12px;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  border: 1px solid #1e3a6e;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.carnet-credencial-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.35);
+}
+
+/* Reglas de impresión para carnets: exactamente 4 por página en cuadrícula 2x2 */
+@media print {
+  /* Ocultar elementos de navegación e interfaz general durante la impresión */
+  .no-print, nav, header, aside, .tabs-bar, .app-header, button {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .print-page-carnets {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-rows: repeat(2, 1fr) !important;
+    gap: 15px !important;
+    height: 100vh !important;
+    padding: 15px !important;
+    box-sizing: border-box !important;
+    page-break-after: always !important;
+    break-after: page !important;
+    align-content: center !important;
+    justify-items: center !important;
+  }
+
+  .carnet-credencial-card {
+    box-shadow: none !important;
+    border: 1px solid #000000 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    width: 350px !important;
+    height: 215px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .print-report-container {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 10px !important;
+    page-break-inside: auto !important;
+  }
+}

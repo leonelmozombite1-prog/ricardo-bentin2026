@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión - Colegio Ricardo Bentín 64935</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0b1c3d;
+      --accent: #c99a20;
+      --accent-hover: #b08419;
+      --bg-overlay: rgba(11, 28, 61, 0.75);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(var(--bg-overlay), var(--bg-overlay)), url('imagen_login.jpg') no-repeat center center fixed;
+      background-size: cover;
+      padding: 20px;
+    }
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .login-header {
+      background: #0b1c3d;
+      color: white;
+      text-align: center;
+      padding: 30px 24px 24px;
+      border-bottom: 4px solid var(--accent);
+    }
+    .login-logo {
+      width: 72px;
+      height: 72px;
+      background: white;
+      border-radius: 50%;
+      padding: 6px;
+      margin: 0 auto 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .login-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .login-header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+    .login-header p {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .login-body {
+      padding: 30px 28px;
+    }
+    .form-group {
+      margin-bottom: 18px;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      outline: none;
+    }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(201, 154, 32, 0.2);
+    }
+    .btn-submit {
+      width: 100%;
+      padding: 13px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 10px;
+    }
+    .btn-submit:hover { background: var(--accent-hover); }
+    .btn-submit:active { transform: scale(0.99); }
+    .alert {
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      display: none;
+      font-weight: 600;
+      text-align: center;
+    }
+    .alert-danger { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    .alert-success { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+    .login-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.8rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="login-header">
+      <div class="login-logo">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJaEC9lZWlZ-oCP8mZfecwDroVpB2O_hR9Vs8RGTRN0w&s=10" alt="Insignia Colegio Ricardo Bentín 64935">
+      </div>
+      <h1>Colegio Ricardo Bentín 64935</h1>
+      <p>Sistema Oficial de Asistencia</p>
+    </div>
+
+    <div class="login-body">
+      <div id="login-alert" class="alert"></div>
+
+      <form id="login-form" autocomplete="off">
+        <div class="form-group">
+          <label for="usuario">Usuario Administrador</label>
+          <input type="text" id="usuario" placeholder="Ej. admin" required autocomplete="off">
+        </div>
+        <div class="form-group">
+          <label for="clave">Contraseña</label>
+          <input type="password" id="clave" placeholder="••••••••" required autocomplete="new-password">
+        </div>
+        <button type="submit" id="btn-submit" class="btn-submit">Ingresar al Sistema</button>
+      </form>
+
+      <div class="login-footer">
+        Acceso restringido a personal autorizado • I.E. Ricardo Bentín 64935
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const usuario = document.getElementById('usuario').value.trim();
+      const clave = document.getElementById('clave').value.trim();
+      const alertBox = document.getElementById('login-alert');
+      const btn = document.getElementById('btn-submit');
+
+      btn.disabled = true;
+      btn.textContent = 'Verificando...';
+
+      try {
+        const response = await fetch('login.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ usuario, clave })
+        });
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          alertBox.className = 'alert alert-success';
+          alertBox.style.display = 'block';
+          alertBox.textContent = data.message || 'Bienvenido al sistema.';
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 800);
+        } else {
+          throw new Error(data.message || 'Credenciales inválidas.');
+        }
+      } catch (err) {
+        alertBox.className = 'alert alert-danger';
+        alertBox.style.display = 'block';
+        alertBox.textContent = err.message;
+        btn.disabled = false;
+        btn.textContent = 'Ingresar al Sistema';
+      }
+    });
+  </script>
+</body>
+</html>
