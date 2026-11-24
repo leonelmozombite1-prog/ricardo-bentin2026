@@ -28,9 +28,8 @@ export function LoginView({
       const cleanUser = username.trim().toLowerCase();
       const cleanPass = password.trim();
 
-      // Authorized credentials:
-      // Usuario: admin | Contraseña: 63935 (also admin123 as secondary fallback)
-      if (cleanUser === 'admin' && (cleanPass === '63935' || cleanPass === 'admin123')) {
+      // Credenciales autorizadas
+      if (cleanUser === 'admin' && cleanPass === '64935') {
         setIsLoading(false);
         onLoginSuccess({
           username: 'admin',
@@ -40,20 +39,9 @@ export function LoginView({
         setIsLoading(false);
         setIsShaking(true);
         setTimeout(() => setIsShaking(false), 500);
-
-        if (cleanUser !== 'admin') {
-          setErrorMsg('Usuario incorrecto. El usuario autorizado es "admin".');
-        } else {
-          setErrorMsg('Contraseña incorrecta. Verifique la clave ingresada.');
-        }
+        setErrorMsg('Usuario o contraseña incorrectos. Verifique las credenciales ingresadas.');
       }
     }, 450);
-  };
-
-  const autofillAdmin = () => {
-    setUsername('admin');
-    setPassword('63935');
-    setErrorMsg('');
   };
 
   return (
@@ -131,9 +119,14 @@ export function LoginView({
                 </div>
                 <input
                   type="text"
+                  name="sistema_usuario"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="admin"
+                  placeholder="Ingrese su usuario"
+                  autoComplete="off"
+                  autoCapitalize="none"
+                  autoCorrect="off"
+                  spellCheck={false}
                   required
                   autoFocus
                   className="w-full pl-10 pr-4 py-2.5 sm:py-3 text-xs sm:text-sm rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition shadow-xs"
@@ -152,9 +145,11 @@ export function LoginView({
                 </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
+                  name="sistema_clave"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
+                  autoComplete="new-password"
                   required
                   className="w-full pl-10 pr-11 py-2.5 sm:py-3 text-xs sm:text-sm rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition shadow-xs"
                 />
@@ -186,27 +181,7 @@ export function LoginView({
             </button>
           </form>
 
-          {/* Acceso Rápido / Credenciales de demostración */}
-          <div className="mt-6 pt-5 border-t border-slate-200 dark:border-slate-800 text-center">
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-2">
-              Credenciales oficiales de dirección:
-            </p>
-            <button
-              type="button"
-              onClick={autofillAdmin}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300 text-xs font-semibold transition cursor-pointer"
-              title="Autocompletar usuario y contraseña"
-            >
-              <span className="font-mono font-bold">admin</span>
-              <span className="text-amber-400">/</span>
-              <span className="font-mono font-bold">63935</span>
-              <span className="text-[10px] bg-amber-200 dark:bg-amber-800 px-1.5 py-0.5 rounded text-amber-900 dark:text-amber-100 font-bold ml-1">
-                Llenar
-              </span>
-            </button>
-          </div>
-
-          <div className="mt-5 text-center">
+          <div className="mt-6 pt-4 border-t border-slate-200 dark:border-slate-800 text-center">
             <span className="text-[10px] text-slate-600 dark:text-slate-400">
               © 2026 Colegio Ricardo Bentín • Turno Tarde
             </span>

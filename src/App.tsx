@@ -20,13 +20,14 @@ import {
   AttendanceRecord
 } from './types';
 import { playSuccessChime, playWarningChime } from './utils/audio';
-import { exportStudentsToCSV, exportFullBackupJSON, exportDatabaseSQL } from './utils/export';
+import { exportStudentsToCSV } from './utils/export';
 import { formatToAMPM, getCurrentTimeAMPM, parseLimitTimeToMinutes } from './utils/time';
 import { CarnetCard } from './components/CarnetCard';
 import { KioskModal } from './components/KioskModal';
 import { ScannerModal } from './components/ScannerModal';
 import { LoginView } from './components/LoginView';
 import { ConfirmModal } from './components/ConfirmModal';
+import { StudentImportTab } from './components/StudentImportTab';
 import {
   QrCode,
   Users,
@@ -37,8 +38,6 @@ import {
   Sun,
   Printer,
   FileSpreadsheet,
-  Download,
-  Upload,
   UserPlus,
   Clock,
   CheckCircle2,
@@ -54,6 +53,7 @@ import {
   PrinterIcon,
   X,
   FileText,
+  FileUp,
   LogOut,
   User as UserIcon
 } from 'lucide-react';
@@ -86,7 +86,7 @@ export default function App() {
     return localStorage.getItem('bentin_dark_mode') === 'true';
   });
 
-  // Sesión de Usuario (Login con usuario: admin / clave: 63935)
+  // Sesión de Usuario
   const [session, setSession] = useState<{ isLogged: boolean; username: string; fullname: string }>(() => {
     const saved = localStorage.getItem('bentin_session_user');
     return saved ? JSON.parse(saved) : { isLogged: false, username: '', fullname: '' };
@@ -174,7 +174,6 @@ export default function App() {
   const [reportFilterSection, setReportFilterSection] = useState<string>('all');
 
   // Referencias para archivos
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const studentPhotoInputRef = useRef<HTMLInputElement>(null);
   const teacherPhotoFileInputRef = useRef<HTMLInputElement>(null);
   const teacherCardPhotoInputRef = useRef<HTMLInputElement>(null);
@@ -898,7 +897,8 @@ export default function App() {
             { id: 'carnets', label: 'Carnets QR', icon: GraduationCap },
             { id: 'profesores', label: 'Profesorado', icon: Users },
             { id: 'calendario', label: '📅 Calendario', icon: CalendarIcon },
-            { id: 'reportes', label: 'Parte Oficial', icon: Printer }
+            { id: 'reportes', label: 'Parte Oficial', icon: Printer },
+            { id: 'actualizar', label: 'Actualizar Padrón', icon: FileUp }
           ].map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -1030,7 +1030,7 @@ export default function App() {
            ========================================================= */}
         {activeTab === 'estudiantes' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-in fade-in duration-200">
-            {/* Columna Izquierda: REGISTRAR ALUMNO + COPIA DE SEGURIDAD */}
+            {/* Columna Izquierda: REGISTRAR ALUMNO */}
             <div className="lg:col-span-4 space-y-5">
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
                 <h3 className="font-cinzel text-xs uppercase font-extrabold tracking-wider text-amber-600 dark:text-amber-400 mb-4">
@@ -1047,7 +1047,7 @@ export default function App() {
                     const section = (form.elements.namedItem('section') as HTMLSelectElement).value;
 
                     if (students.some((s) => s.dni === dni)) {
-                      alert('El DNI ingresado ya existe en el sistema.');
+                      setAlertInfo({ message: 'El DNI ingresado ya existe en el sistema.', type: 'danger' });
                       return;
                     }
 
@@ -1138,59 +1138,6 @@ export default function App() {
                     Guardar Estudiante
                   </button>
                 </form>
-              </div>
-
-              {/* Card 2: COPIA DE SEGURIDAD */}
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-3">
-                <h3 className="font-cinzel text-xs uppercase font-extrabold tracking-wider text-amber-600 dark:text-amber-400">
-                  COPIA DE SEGURIDAD
-                </h3>
-
-                <button
-                  onClick={() => exportFullBackupJSON({ config, students, teachers, exceptions })}
-                  className="w-full py-2 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-2 cursor-pointer border border-slate-200 dark:border-slate-700"
-                >
-                  <Download className="w-4 h-4 text-amber-600" />
-                  <span>📤 Exportar Respaldo</span>
-                </button>
-
-                <button
-                  onClick={() => exportDatabaseSQL(students, teachers, config.nombre_colegio)}
-                  className="w-full py-2 px-3 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/50 text-amber-800 dark:text-amber-200 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-2 cursor-pointer border border-amber-300 dark:border-amber-700/50 shadow-xs"
-                >
-                  <FileText className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                  <span>💾 Descargar database.sql</span>
-                </button>
-
-                <label className="w-full py-2 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-2 cursor-pointer border border-slate-200 dark:border-slate-700">
-                  <Upload className="w-4 h-4 text-amber-600" />
-                  <span>📥 Importar Respaldo</span>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".json"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
-                      const reader = new FileReader();
-                      reader.onload = (event) => {
-                        try {
-                          const parsed = JSON.parse(event.target?.result as string);
-                          if (parsed.students && Array.isArray(parsed.students)) {
-                            setStudents(parsed.students);
-                          }
-                          if (parsed.teachers) setTeachers(parsed.teachers);
-                          if (parsed.config) setConfig(parsed.config);
-                          alert('¡Copia de seguridad importada con éxito!');
-                        } catch {
-                          alert('Error al leer el archivo JSON.');
-                        }
-                      };
-                      reader.readAsText(file);
-                    }}
-                  />
-                </label>
               </div>
             </div>
 
@@ -1648,6 +1595,37 @@ export default function App() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* =========================================================
+            PESTAÑA 7: ACTUALIZAR PADRÓN (EXCEL / WORD / PDF)
+           ========================================================= */}
+        {activeTab === 'actualizar' && (
+          <StudentImportTab
+            existingStudents={students}
+            teachers={teachers}
+            config={config}
+            exceptions={exceptions}
+            onApplyStudents={(updatedList, summaryMessage) => {
+              setStudents(updatedList);
+              setAlertInfo({ message: summaryMessage, type: 'success' });
+            }}
+            onRestoreBackup={(backupData, summaryMessage) => {
+              if (backupData.students && Array.isArray(backupData.students)) {
+                setStudents(backupData.students);
+              }
+              if (backupData.teachers && Array.isArray(backupData.teachers)) {
+                setTeachers(backupData.teachers);
+              }
+              if (backupData.config) {
+                setConfig(backupData.config);
+              }
+              if (backupData.exceptions && Array.isArray(backupData.exceptions)) {
+                setExceptions(backupData.exceptions);
+              }
+              setAlertInfo({ message: summaryMessage, type: 'success' });
+            }}
+          />
         )}
       </main>
 
@@ -2759,17 +2737,6 @@ export default function App() {
                   required
                   className="w-full text-xs p-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800"
                 />
-              </div>
-
-              <div className="pt-2 border-t border-slate-200 dark:border-slate-800">
-                <button
-                  type="button"
-                  onClick={() => exportDatabaseSQL(students, teachers, config.nombre_colegio)}
-                  className="w-full py-2.5 px-3 bg-amber-50 hover:bg-amber-100 dark:bg-amber-950/40 dark:hover:bg-amber-900/50 text-amber-800 dark:text-amber-200 text-xs font-semibold rounded-lg transition flex items-center justify-center gap-2 cursor-pointer border border-amber-300 dark:border-amber-700/50"
-                >
-                  <FileText className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-                  <span>💾 Descargar database.sql ({students.length} alumnos)</span>
-                </button>
               </div>
 
               <div className="flex gap-2 pt-3">

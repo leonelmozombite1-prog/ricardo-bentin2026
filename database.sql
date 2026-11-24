@@ -8,6 +8,7 @@
 
 CREATE DATABASE IF NOT EXISTS `colegio_asistencia` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `colegio_asistencia`;
+SET NAMES utf8mb4;
 
 -- 1. Tabla de Usuarios (Administradores / Personal de Control)
 CREATE TABLE IF NOT EXISTS `usuarios` (
@@ -21,9 +22,9 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 -- 2. Tabla de Configuración de la Institución
 CREATE TABLE IF NOT EXISTS `configuracion` (
   `id` INT PRIMARY KEY,
-  `nombre_colegio` VARCHAR(150) NOT NULL DEFAULT 'Colegio Ricardo Bentin Grande',
+  `nombre_colegio` VARCHAR(150) NOT NULL DEFAULT 'Colegio Ricardo Bentín 64935',
   `hora_limite` TIME NOT NULL DEFAULT '08:00:00',
-  `total_dias` INT NOT NULL DEFAULT 1,
+  `total_dias` INT NOT NULL DEFAULT 24,
   `logo_url` TEXT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -74,13 +75,13 @@ CREATE TABLE IF NOT EXISTS `calendario_excepciones` (
 
 -- Usuario Administrador por Defecto
 INSERT INTO `usuarios` (`id`, `usuario`, `clave`, `nombre_completo`) 
-VALUES (1, 'admin', '63935', 'Administrador General')
-ON DUPLICATE KEY UPDATE `usuario` = `usuario`;
+VALUES (1, 'admin', '64935', 'Administrador General')
+ON DUPLICATE KEY UPDATE `clave` = VALUES(`clave`), `nombre_completo` = VALUES(`nombre_completo`);
 
 -- Configuración Institucional
-INSERT INTO `configuracion` (`id`, `nombre_colegio`, `hora_limite`, `total_dias`)
-VALUES (1, 'Colegio Ricardo Bentin Grande', '08:00:00', 1)
-ON DUPLICATE KEY UPDATE `id` = `id`;
+INSERT INTO `configuracion` (`id`, `nombre_colegio`, `hora_limite`, `total_dias`, `logo_url`)
+VALUES (1, 'Colegio Ricardo Bentín 64935', '08:00:00', 24, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJaEC9lZWlZ-oCP8mZfecwDroVpB2O_hR9Vs8RGTRN0w&s=10')
+ON DUPLICATE KEY UPDATE `nombre_colegio` = VALUES(`nombre_colegio`), `hora_limite` = VALUES(`hora_limite`), `total_dias` = VALUES(`total_dias`), `logo_url` = VALUES(`logo_url`);
 
 -- Directorio Docente
 INSERT INTO `profesores` (`dni`, `nombre_completo`, `especialidad`, `foto`) VALUES
